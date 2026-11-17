@@ -729,7 +729,33 @@
 
   function authMsg(text,type='error'){$('auth-flash').innerHTML=`<div class="notice ${type}">${esc(text)}</div>`}
 
-  function showAuth(view){document.body.classList.remove('authed');document.querySelectorAll('[data-auth]').forEach(el=>{el.hidden=el.dataset.auth!==view});$('auth-flash').replaceChildren();window.scrollTo(0,0);const first=document.querySelector(`[data-auth="${view}"] input`);if(first)setTimeout(()=>first.focus(),30)}
+  function showAuth(view) {
+    document.body.classList.remove('authed');
+
+    document.querySelectorAll('[data-auth]').forEach(el => {
+        el.hidden = el.dataset.auth !== view;
+    });
+
+    // Troca a logo conforme a tela exibida
+    const authLogo = document.getElementById('auth-logo');
+
+    if (authLogo) {
+        authLogo.src = view === 'register'
+            ? 'logo-fatec-preta.png'
+            : 'logo-fatec-branca.png';
+    }
+
+    $('auth-flash').replaceChildren();
+    window.scrollTo(0, 0);
+
+    const first = document.querySelector(
+        `[data-auth="${view}"] input`
+    );
+
+    if (first) {
+        setTimeout(() => first.focus(), 30);
+    }
+}
 
     // ========================================
   // 7. ENTRADA E SAÍDA DO SISTEMA
@@ -739,10 +765,15 @@
     closeModal();
 
     user = null;
-    role = null;
+    
     current = 'dashboard';
 
-    document.body.classList.remove('gestor-theme');
+   const perfilAnterior = role;
+
+   role = null;
+
+document.body.classList.remove('authed');
+document.body.classList.add(`role-${perfilAnterior}`);
 
     showAuth(view);
 
@@ -758,10 +789,16 @@
     pendingUser = null;
     loginCode = null;
 
-    document.body.classList.add('authed');
+    // Ativa o tema de acordo com o perfil do usuário
+document.body.classList.remove(
+    'role-professor',
+    'role-auxiliar',
+    'role-gestor',
+    'gestor-theme'
+);
 
-    // Ativa o tema vermelho e cinza somente para o gestor
-    document.body.classList.toggle('gestor-theme', u.role === 'gestor');
+document.body.classList.add('authed');
+document.body.classList.add(`role-${u.role}`);
 
     $('user-chip').textContent = `${u.name} · ${roleName[u.role]}`;
     $('personal-name').value = u.name;
@@ -783,7 +820,25 @@
   }
 
 
-  function startCode(u){pendingUser=u;loginCode=newCode();codeTries=0;$('code-target').textContent=maskEmail(u.email);$('demo-code').textContent=loginCode;showAuth('code')}
+  function startCode(u) {
+    pendingUser = u;
+    loginCode = newCode();
+    codeTries = 0;
+
+    // Identifica o perfil para aplicar o gradiente correto
+    document.body.classList.remove(
+        'role-professor',
+        'role-gestor',
+        'role-auxiliar'
+    );
+
+    document.body.classList.add(`role-${u.role}`);
+
+    $('code-target').textContent = maskEmail(u.email);
+    $('demo-code').textContent = loginCode;
+
+    showAuth('code');
+}
 
 
   // ========================================
