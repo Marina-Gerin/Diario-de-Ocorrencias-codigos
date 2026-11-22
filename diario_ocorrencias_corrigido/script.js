@@ -956,13 +956,16 @@ document.body.classList.add(`role-${u.role}`);
     resetUser.pass=p1;resetUser=null;$('reset-form').reset();showAuth('login');authMsg('Senha redefinida. Entre com a nova senha.','success')})});
 
 
-  // ========================================
-  // 10. INICIALIZAÇÃO DO SISTEMA
-  // ========================================
+
 
   $('maintenance-date').value=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16);
 
   renderChecks();
-  showAuth('login');
+  const parametros = new URLSearchParams(window.location.search);
 
+if (parametros.get('acesso') === 'cadastro') {
+    showAuth('register');
+} else {
+    showAuth('login');
+}
 })();

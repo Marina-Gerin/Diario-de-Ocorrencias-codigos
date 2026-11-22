@@ -1225,3 +1225,23 @@ body:not(.authed).role-gestor .auth-brand {
     }
 
 }
+
+/* =========================================
+   LINK DE VOLTAR PARA A PÁGINA SOBRE
+========================================= */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-bottom: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #B20000;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    color: #850000;
+    text-decoration: underline;
+}
